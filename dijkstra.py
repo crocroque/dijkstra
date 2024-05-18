@@ -5,8 +5,11 @@ class Algorithme_de_dijkstra:
         etapes_dict = {}
         etape_nbr = 0
 
+        tableau_vide_char = "∞"
+        tableau_rempli_char = "|"
+
         for i in route.keys():
-            tableau_dijkstra[i] = "-" if i != lettre_depart else 0
+            tableau_dijkstra[i] = tableau_vide_char if i != lettre_depart else 0
 
         while True:
             etapes_dict[f"step {etape_nbr}"] = tableau_dijkstra.copy()
@@ -34,7 +37,7 @@ class Algorithme_de_dijkstra:
 
             for i in route.keys():
                 if i in lettre_choisi:
-                    tableau_dijkstra[i] = "|"
+                    tableau_dijkstra[i] = tableau_rempli_char
 
                 elif i in route[position]["Chemin"].keys():
                     precedent_contenu = etapes_dict[f"step {etape_nbr - 1}"][i]
@@ -84,6 +87,6 @@ class Algorithme_de_dijkstra:
 
         chemin.reverse()
 
-        self.chemin = chemin
+        self.meilleur_chemin = chemin
         self.distance = distance
-        self.tableau = etapes_dict
+        self.steps = etapes_dict
