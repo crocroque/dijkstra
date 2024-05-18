@@ -45,7 +45,7 @@
     
 > 32
 
-    print(algo.tableau)
+    print(algo.steps)
 
 > {
 
