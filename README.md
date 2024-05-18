@@ -13,5 +13,5 @@
         "J": {"Chemin": {"I": {"distance": 84}, "H": {"distance": 167}, "E": {"distance": 502}}},
     }
 
-    
-![^^](/DijkstraExemple.png")
+
+![alt text](https://github.com/crocroque/dijkstra/blob/main/DijkstraExemple.png)
