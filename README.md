@@ -33,7 +33,8 @@
 ![alt text](https://github.com/crocroque/dijkstra/blob/main/DijkstraExample2.png)
 
 # Exemple de code :
-
+    from dijkstra import Algorithme_de_dijkstra
+    
     algo = Algorithme_de_dijkstra(route=Route_Exemple2, lettre_depart="A", lettre_arrive="H")
 
     print(algo.meilleur_chemin)
