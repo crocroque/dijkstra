@@ -15,7 +15,7 @@
     }
 
 
-![alt text](https://github.com/crocroque/dijkstra/blob/main/DijkstraExample.png)
+![alt text](https://github.com/crocroque/dijkstra/blob/main/images/DijkstraExample.png)
 
 
 # Exemple de route 2 :
@@ -30,7 +30,7 @@
         "H": {"Chemin": {"E": {"distance": 10}, "F": {"distance": 11}, "B": {"distance": 21}, "G": {"distance": 11}}},
     }
 
-![alt text](https://github.com/crocroque/dijkstra/blob/main/DijkstraExample2.png)
+![alt text](https://github.com/crocroque/dijkstra/blob/main/images/DijkstraExample2.png)
 
 # Exemple de code :
     from dijkstra import Algorithme_de_dijkstra
