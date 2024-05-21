@@ -171,8 +171,7 @@ while running:
                         point_selectionne = i
                         break
 
-
-                if point_selectionne is not None:
+                if point_selectionne is not None and point_selectionne[1]['Chemin'] != {}:
                     remove_lines_root = Tk()
 
                     entries_per_row = 5
