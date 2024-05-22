@@ -2,6 +2,30 @@ import pygame
 from tkinter import *
 import clipboard
 
+colors = {
+    "Red": (255, 0, 0),
+    "Blue": (0, 0, 255),
+    "Green": (0, 255, 0),
+    "Yellow": (255, 255, 0),
+    "Orange": (255, 165, 0),
+    "Purple": (128, 0, 128),
+    "Pink": (255, 192, 203),
+    "Brown": (165, 42, 42),
+    "Black": (0, 0, 0),
+    "White": (255, 255, 255),
+    "Gray": (128, 128, 128),
+    "Cyan": (0, 255, 255),
+    "Magenta": (255, 0, 255),
+    "Lime": (0, 255, 0),
+    "Maroon": (128, 0, 0),
+    "Navy": (0, 0, 128),
+    "Olive": (128, 128, 0),
+    "Teal": (0, 128, 128),
+    "Silver": (192, 192, 192),
+    "Gold": (255, 215, 0)
+}
+
+
 def end_connection_root():
     for i in label_entry_choix:
         if i[1].get().isdigit():
@@ -41,13 +65,13 @@ def copy_route():
 def set_type_of_points(type_of_points):
     global nom_itineraire_type
 
+
     if type_of_points == "Numbers":
         nom_itineraire_type = int
 
     elif type_of_points == 'Letters':
-        nom_itineraire_type = list
-
         global noms_points
+        nom_itineraire_type = list
 
         noms_points = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
@@ -64,7 +88,7 @@ for i in ["Numbers", "Letters"]:
 type_of_points_choix_root.mainloop()
 pygame.init()
 
-background_color = (255,255,255)
+background_color = (255, 255, 255)
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
@@ -83,16 +107,15 @@ font = pygame.font.SysFont(None, 30)
 iterateur_point = -1
 iterateur_point_liste = 0
 
-
 points = {}
 
 lines = []
 
 tools_root = Tk()
-tools_root.geometry("400x200")
+tools_root.geometry("400x400")
 is_place = IntVar()
 
-scale = Scale(tools_root, from_=0, to=3, showvalue=False, orient=HORIZONTAL, variable=is_place, width=15,length=250)
+scale = Scale(tools_root, from_=0, to=3, showvalue=False, orient=HORIZONTAL, variable=is_place, width=15, length=250)
 scale.pack()
 Label(tools_root, text="PLACE (A)               MOVE(Z)      REMOVE (E)          SELECT (R)", font=("courrier", 10)).pack(fill="both")
 
@@ -105,15 +128,25 @@ generate_route_text.pack()
 copy_route_btn = Button(tools_root, text="copy", command=copy_route)
 copy_route_btn.pack()
 
+Label(tools_root, text='--- Background Color ---').pack(pady=15)
+selected_colors_bg = StringVar()
+selected_colors_bg.set(list(colors)[0])
+OptionMenu(tools_root, selected_colors_bg, *list(colors)).pack()
+
+Label(tools_root, text='--- Text Color ---').pack(pady=15)
+selected_colors_txt = StringVar()
+selected_colors_txt.set(list(colors)[0])
+OptionMenu(tools_root, selected_colors_txt, *list(colors)).pack()
+
+
 while running:
     screen.fill(background_color)
+    txt_color = selected_colors_txt.get()
+    background_color = selected_colors_bg.get()
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-
-
 
     if mouse.get_pressed(3)[0] and is_place != 1:
         pressed = True
@@ -224,13 +257,14 @@ while running:
                     connection_root.geometry(f"{entries_per_row * 75 + 30}x{(row + 1) * 55 + 10}+0+0")
                     connection_root.mainloop()
 
-    for i in points.values():
-        screen.blit(i["surface"], i["rect"])
+    for i in points.items():
+        i[1]["surface"] = font.render(i[0], True, txt_color)
+        screen.blit(i[1]["surface"], i[1]["rect"])
 
     lines = []
     for i in points.items():
         for m in i[1]['Chemin']:
-            lines.append((screen, (0, 0, 0), i[1]['rect'].center, points[m]['rect'].center, i[1]["Chemin"][m]['distance']))
+            lines.append((screen, txt_color, i[1]['rect'].center, points[m]['rect'].center, i[1]["Chemin"][m]['distance']))
 
 
     for screen, color, pos1, pos2, distance in lines:
@@ -246,7 +280,6 @@ while running:
 
     tools_root.update()
     pygame.display.flip()
-    #fps.tick(120)
 
 
 pygame.quit()
