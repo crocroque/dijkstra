@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from algorithme.dijkstra import *
+from dijkstra import Algorithme_de_dijkstra
 import json
 
 
