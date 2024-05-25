@@ -1,12 +1,9 @@
 class Algorithme_de_dijkstra:
-    def __init__(self, route, lettre_depart: str, lettre_arrive: str):
+    def __init__(self, route, lettre_depart: str, lettre_arrive: str, tableau_vide_char: str = "∞", tableau_rempli_char: str = "|"):
         lettre_choisi = []
         tableau_dijkstra = {}
         etapes_dict = {}
         etape_nbr = 0
-
-        tableau_vide_char = "∞"
-        tableau_rempli_char = "|"
 
         for i in route.keys():
             tableau_dijkstra[i] = tableau_vide_char if i != lettre_depart else 0
@@ -86,6 +83,11 @@ class Algorithme_de_dijkstra:
                 prochaine_lettre = i["choix"][2]
 
         chemin.reverse()
+
+        for i in etapes_dict.values():
+            if i['choix'][0] == lettre_arrive:
+                distance = i['choix'][1]
+                break
 
         self.meilleur_chemin = chemin
         self.distance = distance
