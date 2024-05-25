@@ -7,7 +7,7 @@ import json
 def visualisation(dictionnaire):
     def insert_data(tree, steps, columns):
         for step, values in steps.items():
-            choix_str = f"{values['choix'][0]}({values['choix'][1]})"
+            choix_str = f"{values['choix'][0]} ({values['choix'][1]}) "
             if len(values['choix']) == 3:
                 choix_str += f"{values['choix'][2]}"
             row = [values.get(col, '') for col in columns[0:-1]] + [choix_str]
@@ -19,7 +19,7 @@ def visualisation(dictionnaire):
 
         algo = Algorithme_de_dijkstra(dictionnaire, lettre_arrive=start_point.get(), lettre_depart=end_point.get())
 
-        best_chemin_str = f"{algo.meilleur_chemin}"
+        best_chemin_str = f"{algo.meilleur_chemin} | distance : {algo.distance}"
         best_chemin_label.configure(text=best_chemin_str)
 
         columns = []
