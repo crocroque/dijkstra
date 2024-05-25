@@ -22,7 +22,8 @@ colors = {
     "Olive": (128, 128, 0),
     "Teal": (0, 128, 128),
     "Silver": (192, 192, 192),
-    "Gold": (255, 215, 0)
+    "Gold": (255, 215, 0),
+    'Coral': (255, 127, 80)
 }
 
 
@@ -47,6 +48,17 @@ def end_lines_root(point_a_suppr=None):
     remove_lines_root.quit()
     remove_lines_root.destroy()
 
+
+def end_choix_name_point_root():
+    global nom_point
+    choix = choose_point_name_entry.get()
+
+    if choix != "" and not choix in points:
+        nom_point = choix
+
+
+        choose_point_name_root.quit()
+        choose_point_name_root.destroy()
 
 def generate_route():
     route = {}
@@ -75,14 +87,18 @@ def set_type_of_points(type_of_points):
 
         noms_points = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+    elif type_of_points == "Personalized":
+        nom_itineraire_type = "Personalized"
+
     type_of_points_choix_root.quit()
     type_of_points_choix_root.destroy()
 
 type_of_points_choix_root = Tk()
+type_of_points_choix_root.title("type of points")
 
 Label(type_of_points_choix_root, text="points type : ").pack()
 
-for i in ["Numbers", "Letters"]:
+for i in ["Numbers", "Letters", "Personalized"]:
     Button(type_of_points_choix_root, text=i, command=lambda i=i: set_type_of_points(i)).pack()
 
 type_of_points_choix_root.mainloop()
@@ -92,6 +108,7 @@ background_color = (255, 255, 255)
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
+pygame.display.set_caption("Route creator")
 
 running = True
 
@@ -112,31 +129,44 @@ points = {}
 lines = []
 
 tools_root = Tk()
-tools_root.geometry("400x400")
+tools_root.geometry("420x450")
+tools_root.title("TOOLS")
 is_place = IntVar()
 
-scale = Scale(tools_root, from_=0, to=3, showvalue=False, orient=HORIZONTAL, variable=is_place, width=15, length=250)
-scale.pack()
-Label(tools_root, text="PLACE (A)               MOVE(Z)      REMOVE (E)          SELECT (R)", font=("courrier", 10)).pack(fill="both")
+Label(tools_root, text="               MOVE(Z)             SELECT (R)  ", font=("courrier", 10)).place(x=75, y=0)
+scale = Scale(tools_root, from_=0, to=4, showvalue=False, orient=HORIZONTAL, variable=is_place, width=15, length=250)
+scale.place(x=75, y=25)
+Label(tools_root, text="PLACE (A)         REMOVE LINES (E)       DELETE (T)", font=("courrier", 10)).place(x=75, y=50)
 
-generate_route_button = Button(tools_root, text="generate", command=generate_route)
-generate_route_button.pack(pady=15)
+place_scale_nbr = 0
+move_scale_nbr = 1
+remove_scale_nbr = 2
+select_scale_nbr = 3
+delete_scale_nbr = 4
 
-generate_route_text = Text(tools_root, height=2, width=45)
+param_frame = Frame(tools_root)
+param_frame.pack(pady=90)
+
+generate_route_button = Button(param_frame, text="generate", command=generate_route)
+generate_route_button.pack()
+
+generate_route_text = Text(param_frame, height=2, width=45)
 generate_route_text.pack()
 
-copy_route_btn = Button(tools_root, text="copy", command=copy_route)
+copy_route_btn = Button(param_frame, text="copy", command=copy_route)
 copy_route_btn.pack()
 
-Label(tools_root, text='--- Background Color ---').pack(pady=15)
-selected_colors_bg = StringVar()
-selected_colors_bg.set(list(colors)[0])
-OptionMenu(tools_root, selected_colors_bg, *list(colors)).pack()
+colors_name = list(colors)
 
-Label(tools_root, text='--- Text Color ---').pack(pady=15)
+Label(param_frame, text='--- Background Color ---').pack(pady=15)
+selected_colors_bg = StringVar()
+selected_colors_bg.set(colors_name[colors_name.index("White")])
+OptionMenu(param_frame, selected_colors_bg, *colors_name).pack()
+
+Label(param_frame, text='--- Text Color ---').pack(pady=15)
 selected_colors_txt = StringVar()
-selected_colors_txt.set(list(colors)[0])
-OptionMenu(tools_root, selected_colors_txt, *list(colors)).pack()
+selected_colors_txt.set(colors_name[colors_name.index("Black")])
+OptionMenu(param_frame, selected_colors_txt, *colors_name).pack()
 
 
 while running:
@@ -152,15 +182,17 @@ while running:
         pressed = True
 
     if keys[pygame.K_a]:
-        scale.set(0)
+        scale.set(place_scale_nbr)
     elif keys[pygame.K_z]:
-        scale.set(1)
+        scale.set(move_scale_nbr)
     elif keys[pygame.K_e]:
-        scale.set(2)
+        scale.set(remove_scale_nbr)
     elif keys[pygame.K_r]:
-        scale.set(3)
+        scale.set(select_scale_nbr)
+    elif keys[pygame.K_t]:
+        scale.set(delete_scale_nbr)
 
-    if is_place.get() == 1:
+    if is_place.get() == move_scale_nbr:
         if mouse.get_pressed(3)[0]:
             point_selectionne = None
             for i in points.items():
@@ -175,11 +207,25 @@ while running:
         if not mouse.get_pressed(3)[0]:
             pressed = False
 
-            if is_place.get() == 0:
+            if is_place.get() == place_scale_nbr:
                 iterateur_point += 1
+
+                point_coor = mouse.get_pos()
 
                 if nom_itineraire_type is int:
                     nom_point = iterateur_point
+
+                elif nom_itineraire_type == "Personalized":
+                    choose_point_name_root = Tk()
+
+                    Label(choose_point_name_root, text="Point names :").pack()
+
+                    choose_point_name_entry = Entry(choose_point_name_root, width=25)
+                    choose_point_name_entry.pack()
+
+                    Button(choose_point_name_root, text="choose", command=end_choix_name_point_root).pack()
+
+                    choose_point_name_root.mainloop()
 
                 elif nom_itineraire_type is list:
                     if len(noms_points) == iterateur_point:
@@ -193,11 +239,11 @@ while running:
                 text_surface = font.render(text, True, txt_color)
                 text_rect = text_surface.get_rect()
 
-                text_rect.x, text_rect.y = mouse.get_pos()
+                text_rect.x, text_rect.y = point_coor
 
                 points[str(nom_point)] = {"surface": text_surface, "rect": text_rect, "Chemin": {}}
 
-            elif is_place.get() == 2:
+            elif is_place.get() == remove_scale_nbr:
                 point_selectionne = None
                 for i in points.items():
                     if i[1]["rect"].collidepoint(mouse.get_pos()):
@@ -219,24 +265,20 @@ while running:
                     remove_lines_root.geometry(f"{entries_per_row * 75 + 100}x{(row + 1) * 55 + 10}")
                     remove_lines_root.mainloop()
 
-            elif is_place.get() == 3:
+            elif is_place.get() == select_scale_nbr:
                 point_selectionne = None
                 for i in points.items():
                     if i[1]["rect"].collidepoint(mouse.get_pos()):
                         point_selectionne = i
                         break
 
-                if point_selectionne is not None:
+                if point_selectionne is not None and len(points) > 1:
                     points_dispo = []
                     for i in points:
                         if i != point_selectionne[0]:
                             points_dispo.append(i)
 
-
-
                     connection_root = Tk()
-
-
                     label_entry_choix = []
 
                     for i, m in enumerate(points_dispo):
@@ -257,6 +299,21 @@ while running:
                     connection_root.geometry(f"{entries_per_row * 75 + 30}x{(row + 1) * 55 + 10}+0+0")
                     connection_root.mainloop()
 
+            elif is_place.get() == delete_scale_nbr:
+                point_selectionne = None
+                for i in points.items():
+                    if i[1]["rect"].collidepoint(mouse.get_pos()):
+                        point_selectionne = i
+                        break
+
+                if point_selectionne is not None:
+                    del points[point_selectionne[0]]
+
+                    for i in points.items():
+                        for m in i[1]['Chemin']:
+                            if m == point_selectionne[0]:
+                                del points[i[0]]['Chemin'][point_selectionne[0]]
+                                break
     for i in points.items():
         i[1]["surface"] = font.render(i[0], True, txt_color)
         screen.blit(i[1]["surface"], i[1]["rect"])
