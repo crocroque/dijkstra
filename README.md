@@ -1,6 +1,7 @@
 
  
 # Exemple de route 1 :
+```python
     Route_Exemple1 = {
         "A": {"Chemin": {"B": {"distance": 85}, "C": {"distance": 217}, "E": {"distance": 173}}},
         "B": {"Chemin": {"A": {"distance": 85}, "F": {"distance": 80}}},
@@ -14,11 +15,12 @@
         "J": {"Chemin": {"I": {"distance": 84}, "H": {"distance": 167}, "E": {"distance": 502}}},
     }
 
-
+```
 ![alt text](https://github.com/crocroque/dijkstra/blob/main/images/DijkstraExample.png)
 
 
 # Exemple de route 2 :
+```python
     Route_Exemple2 = {
         "A": {"Chemin": {"B": {"distance": 12}, "D": {"distance": 14}}},
         "B": {"Chemin": {"A": {"distance": 12}, "F": {"distance": 9}, "H": {"distance": 21}, "G": {"distance": 16}}},
@@ -29,24 +31,23 @@
         "G": {"Chemin": {"B": {"distance": 16}, "H": {"distance": 11}}},
         "H": {"Chemin": {"E": {"distance": 10}, "F": {"distance": 11}, "B": {"distance": 21}, "G": {"distance": 11}}},
     }
-
+```
 ![alt text](https://github.com/crocroque/dijkstra/blob/main/images/DijkstraExample2.png)
 
 # Exemple de code :
+```python
     from dijkstra import Algorithme_de_dijkstra
     
     algo = Algorithme_de_dijkstra(route=Route_Exemple2, lettre_depart="A", lettre_arrive="H")
 
-    print(algo.meilleur_chemin)
-    
-> ['A', 'B', 'F', 'H']
+    print(algo.meilleur_chemin) # output : ['A', 'B', 'F', 'H']
 
-    print(algo.distance)
-    
-> 32
+    print(algo.distance) # output : 32
+
 
     print(algo.steps)
 
+```
 > {
 
 > 'step 0': {'A': 0, 'B': '∞', 'C': '∞', 'D': '∞', 'E': '∞', 'F': '∞', 'G': '∞', 'H': '∞', 'choix': ('A', 0)},
