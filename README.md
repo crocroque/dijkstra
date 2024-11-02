@@ -36,6 +36,7 @@
 
 # Exemple de code :
 ```python
+if __name__ == '__main__':
     from dijkstra import Algorithme_de_dijkstra
     
     algo = Algorithme_de_dijkstra(route=Route_Exemple2, lettre_depart="A", lettre_arrive="H")
